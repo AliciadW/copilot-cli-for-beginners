@@ -3,6 +3,7 @@ from collections.abc import Sequence
 from books import Book
 
 VALID_MENU_CHOICES = {"1", "2", "3", "4", "5"}
+INVALID_MENU_CHOICE_MESSAGE = "Invalid choice. Please enter a number from 1 to 5."
 
 
 def print_menu() -> None:
@@ -17,9 +18,15 @@ def print_menu() -> None:
 def get_user_choice() -> str:
     while True:
         choice = input("Choose an option (1-5): ").strip()
-        if choice in VALID_MENU_CHOICES:
-            return choice
-        print("Invalid choice. Please enter a number from 1 to 5.")
+        if not choice or not choice.isdigit():
+            print(INVALID_MENU_CHOICE_MESSAGE)
+            continue
+
+        if choice not in VALID_MENU_CHOICES:
+            print(INVALID_MENU_CHOICE_MESSAGE)
+            continue
+
+        return choice
 
 
 def _get_required_input(prompt: str, field_name: str) -> str:

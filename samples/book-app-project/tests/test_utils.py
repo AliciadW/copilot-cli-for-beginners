@@ -10,14 +10,14 @@ class TestGetUserChoice:
     """Tests for get_user_choice."""
 
     def test_retries_until_choice_is_valid(self, monkeypatch, capsys):
-        responses = iter(["", "9", "2"])
+        responses = iter(["", "abc", "9", "2"])
         monkeypatch.setattr("builtins.input", lambda _: next(responses))
 
         choice = get_user_choice()
 
         assert choice == "2"
         captured = capsys.readouterr()
-        assert captured.out.count("Invalid choice. Please enter a number from 1 to 5.") == 2
+        assert captured.out.count("Invalid choice. Please enter a number from 1 to 5.") == 3
 
 
 class TestGetBookDetails:
