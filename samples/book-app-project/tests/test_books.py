@@ -51,3 +51,41 @@ def test_remove_book_invalid():
     collection = BookCollection()
     result = collection.remove_book("Nonexistent Book")
     assert result is False
+
+
+@pytest.mark.parametrize(
+    ("query", "expected_titles"),
+    [
+        ("hob", ["The Hobbit"]),
+        ("ORWELL", ["1984"]),
+        ("frank", ["Dune"]),
+    ],
+)
+def test_search_books_matches_title_or_author_partially(query, expected_titles):
+    collection = BookCollection()
+    collection.add_book("The Hobbit", "J.R.R. Tolkien", 1937)
+    collection.add_book("1984", "George Orwell", 1949)
+    collection.add_book("Dune", "Frank Herbert", 1965)
+
+    results = collection.search_books(query)
+
+    assert [book.title for book in results] == expected_titles
+
+
+def test_search_books_returns_empty_list_for_no_matches():
+    collection = BookCollection()
+    collection.add_book("Dune", "Frank Herbert", 1965)
+
+    results = collection.search_books("asimov")
+
+    assert results == []
+
+
+@pytest.mark.parametrize("query", ["", "   "])
+def test_search_books_returns_empty_list_for_blank_queries(query):
+    collection = BookCollection()
+    collection.add_book("Dune", "Frank Herbert", 1965)
+
+    results = collection.search_books(query)
+
+    assert results == []
