@@ -1,4 +1,11 @@
-def print_menu():
+from collections.abc import Sequence
+
+from books import Book
+
+VALID_MENU_CHOICES = {"1", "2", "3", "4", "5"}
+
+
+def print_menu() -> None:
     print("\n📚 Book Collection App")
     print("1. Add a book")
     print("2. List books")
@@ -8,24 +15,44 @@ def print_menu():
 
 
 def get_user_choice() -> str:
-    return input("Choose an option (1-5): ").strip()
+    while True:
+        choice = input("Choose an option (1-5): ").strip()
+        if choice in VALID_MENU_CHOICES:
+            return choice
+        print("Invalid choice. Please enter a number from 1 to 5.")
 
 
-def get_book_details():
-    title = input("Enter book title: ").strip()
-    author = input("Enter author: ").strip()
-
-    year_input = input("Enter publication year: ").strip()
-    try:
-        year = int(year_input)
-    except ValueError:
-        print("Invalid year. Defaulting to 0.")
-        year = 0
-
-    return title, author, year
+def _get_required_input(prompt: str, field_name: str) -> str:
+    while True:
+        value = input(prompt).strip()
+        if value:
+            return value
+        print(f"{field_name} cannot be empty.")
 
 
-def print_books(books):
+def get_book_details() -> tuple[str, str, int]:
+    title = _get_required_input("Enter book title: ", "Title")
+    author = _get_required_input("Enter author: ", "Author")
+
+    while True:
+        year_input = input("Enter publication year: ").strip()
+        if not year_input:
+            return title, author, 0
+
+        try:
+            year = int(year_input)
+        except ValueError:
+            print("Invalid year. Please enter a whole number.")
+            continue
+
+        if year < 0:
+            print("Invalid year. Please enter 0 or a positive number.")
+            continue
+
+        return title, author, year
+
+
+def print_books(books: Sequence[Book]) -> None:
     if not books:
         print("No books in your collection.")
         return
