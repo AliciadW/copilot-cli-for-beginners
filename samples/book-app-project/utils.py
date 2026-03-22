@@ -3,6 +3,7 @@ from collections.abc import Sequence
 from books import Book
 
 VALID_MENU_CHOICES = {"1", "2", "3", "4", "5"}
+INVALID_MENU_CHOICE_MESSAGE = "Invalid choice. Please enter a number from 1 to 5."
 
 
 def print_menu() -> None:
@@ -17,9 +18,15 @@ def print_menu() -> None:
 def get_user_choice() -> str:
     while True:
         choice = input("Choose an option (1-5): ").strip()
-        if choice in VALID_MENU_CHOICES:
-            return choice
-        print("Invalid choice. Please enter a number from 1 to 5.")
+        if not choice or not choice.isdigit():
+            print(INVALID_MENU_CHOICE_MESSAGE)
+            continue
+
+        if choice not in VALID_MENU_CHOICES:
+            print(INVALID_MENU_CHOICE_MESSAGE)
+            continue
+
+        return choice
 
 
 def _get_required_input(prompt: str, field_name: str) -> str:
@@ -31,6 +38,17 @@ def _get_required_input(prompt: str, field_name: str) -> str:
 
 
 def get_book_details() -> tuple[str, str, int]:
+    """Prompt the user for the details needed to create a book entry.
+
+    Parameters:
+        None. The function reads interactive input from the user with
+        prompts for the title, author, and publication year.
+
+    Returns:
+        tuple[str, str, int]: A tuple containing the validated book title,
+        validated author name, and publication year. The year defaults to
+        ``0`` when the user leaves it blank.
+    """
     title = _get_required_input("Enter book title: ", "Title")
     author = _get_required_input("Enter author: ", "Author")
 
