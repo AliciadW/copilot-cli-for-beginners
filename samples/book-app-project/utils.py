@@ -38,6 +38,17 @@ def _get_required_input(prompt: str, field_name: str) -> str:
 
 
 def get_book_details() -> tuple[str, str, int]:
+    """Prompt the user for the details needed to create a book entry.
+
+    Parameters:
+        None. The function reads interactive input from the user with
+        prompts for the title, author, and publication year.
+
+    Returns:
+        tuple[str, str, int]: A tuple containing the validated book title,
+        validated author name, and publication year. The year defaults to
+        ``0`` when the user leaves it blank.
+    """
     title = _get_required_input("Enter book title: ", "Title")
     author = _get_required_input("Enter author: ", "Author")
 
