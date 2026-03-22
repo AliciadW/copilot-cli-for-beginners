@@ -7,6 +7,7 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import books
+from books import Book
 
 
 @pytest.fixture(autouse=True)
@@ -42,3 +43,29 @@ def test_main_shows_help_for_unknown_command(book_app, monkeypatch, capsys):
     output = capsys.readouterr().out
     assert "Unknown command." in output
     assert "Book Collection Helper" in output
+
+
+def test_handle_find_searches_books_by_title_or_author(book_app, monkeypatch, capsys):
+    called = []
+    expected_books = [Book(title="The Hobbit", author="J.R.R. Tolkien", year=1937)]
+
+    monkeypatch.setattr("builtins.input", lambda _: "hob")
+    monkeypatch.setattr(
+        book_app.collection,
+        "search_books",
+        lambda query: called.append(query) or expected_books,
+    )
+
+    book_app.handle_find()
+
+    output = capsys.readouterr().out
+    assert called == ["hob"]
+    assert "Search Books" in output
+    assert "The Hobbit by J.R.R. Tolkien (1937)" in output
+
+
+def test_show_help_describes_title_or_author_search(book_app, capsys):
+    book_app.show_help()
+
+    output = capsys.readouterr().out
+    assert "find     - Search books by title or author" in output

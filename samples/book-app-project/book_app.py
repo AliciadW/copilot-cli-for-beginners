@@ -53,10 +53,10 @@ def handle_remove() -> None:
 
 
 def handle_find() -> None:
-    print("\nFind Books by Author\n")
+    print("\nSearch Books\n")
 
-    author = input("Author name: ").strip()
-    books = collection.find_by_author(author)
+    query = input("Search by title or author: ").strip()
+    books = collection.search_books(query)
 
     show_books(books)
 
@@ -69,7 +69,7 @@ Commands:
   list     - Show all books
   add      - Add a new book
   remove   - Remove a book by title
-  find     - Find books by author
+  find     - Search books by title or author
   help     - Show this help message
 """)
 

@@ -70,3 +70,14 @@ class BookCollection:
     def find_by_author(self, author: str) -> List[Book]:
         """Find all books by a given author."""
         return [b for b in self.books if b.author.lower() == author.lower()]
+
+    def search_books(self, query: str) -> List[Book]:
+        """Search books by partial title or author match."""
+        normalized_query = query.strip().lower()
+        if not normalized_query:
+            return []
+
+        return [
+            book for book in self.books
+            if normalized_query in book.title.lower() or normalized_query in book.author.lower()
+        ]
